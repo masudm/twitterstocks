@@ -17,18 +17,23 @@ app.set("view engine", "ejs");
 app.get("/:time/:ticker", (req, res) => {
 	let t = req.params.time;
 	let time = "TIME_SERIES_INTRADAY&interval=5min";
+	let tObjName = "Time Series (5min)";
 	switch (t) {
 		case "5mins":
 			time = "TIME_SERIES_INTRADAY&interval=5min";
+			tObjName = "Time Series (5min)";
 			break;
 		case "daily":
 			time = "TIME_SERIES_DAILY";
+			tObjName = "Time Series (Daily)";
 			break;
 		case "monthly":
 			time = "TIME_SERIES_MONTHLY";
+			tObjName = "Monthly Time Series";
 			break;
 		default:
 			time = "TIME_SERIES_INTRADAY&interval=5min";
+			tObjName = "Time Series (5min)";
 			break;
 	}
 
@@ -39,7 +44,7 @@ app.get("/:time/:ticker", (req, res) => {
 		"https://www.alphavantage.co/query?function=" + time + "&symbol=" + req.params.ticker + "&apikey=demo",
 		function (error, response, body) {
 			if (response && response.statusCode == 200) {
-				let ticks = JSON.parse(body)["Time Series (Daily)"];
+				let ticks = JSON.parse(body)[tObjName];
 				let adjusted = [];
 				Object.keys(ticks).forEach((element) => {
 					// console.log(element, ticks[element]["4. close"]);

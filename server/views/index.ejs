@@ -120,20 +120,20 @@
 						<h2 class="card-subtitle">some text here</h2>
 					</div>
 					<div class="card">
-						<h1 class="card-title"><span class="small-title">$</span>343</h1>
-						<h2 class="card-subtitle">some text here</h2>
+						<h1 class="card-title"><span class="small-title">$</span><%= info['50DayMovingAverage'] %></h1>
+						<h2 class="card-subtitle">50 Day Moving Average</h2>
 					</div>
 					<div class="card">
-						<h1 class="card-title"><span class="small-title">$</span>343</h1>
-						<h2 class="card-subtitle">some text here</h2>
+						<h1 class="card-title"><span class="small-title">$</span><%= info['52WeekHigh'] %></h1>
+						<h2 class="card-subtitle">52 Week High</h2>
 					</div>
 					<div class="card">
-						<h1 class="card-title"><span class="small-title">$</span>343</h1>
-						<h2 class="card-subtitle">some text here</h2>
+						<h1 class="card-title"><span class="small-title">$</span><%= info['52WeekLow'] %></h1>
+						<h2 class="card-subtitle">52 Week Low</h2>
 					</div>
 					<div class="card">
-						<h1 class="card-title"><span class="small-title">$</span>343</h1>
-						<h2 class="card-subtitle">some text here</h2>
+						<h1 class="card-title"><span class="small-title">$</span><%= info.AnalystTargetPrice %></h1>
+						<h2 class="card-subtitle">Analyst Target Price</h2>
 					</div>
 				</div>
 				<div class="panel">
@@ -157,6 +157,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
 		<script>
 			let info = <%- JSON.stringify(info) %>;
+			console.log(info);
 			let data = <%- JSON.stringify(data) %>;
 
 			var ctx = document.getElementById("myChart").getContext("2d");
@@ -165,8 +166,10 @@
 				data: {
 					datasets: [
 						{
-							label: "Scatter Dataset",
 							data: data,
+							borderColor: '#22A8EE',
+							backgroundColor: 'rgba(34,168,238,0.1)',
+							pointBorderColor: 'rgba(0,0,0,0)'
 						},
 					],
 				},
@@ -176,10 +179,27 @@
 							{
 								type: "time",
 								position: "bottom",
+								gridLines: {
+									display: false
+								}
 							},
 						],
+						yAxes: [
+							{
+								gridLines: {
+									display: true
+								}
+							}
+						],
+						ticks: {
+
+						}
 					},
+					legend: {
+						display: false
+					}
 				},
+
 			});
 		</script>
 	</body>
