@@ -28,15 +28,36 @@ app.get("/:time/:ticker", (req, res) => {
 			time = "TIME_SERIES_INTRADAY&interval=5min";
 			break;
 	}
-	console.log("https://www.alphavantage.co/query?function=" + time + "&symbol=" + req.params.ticker + "&apikey=demo");
+
+	let requestsDone = 0;
+	let output = {};
+
 	request(
 		"https://www.alphavantage.co/query?function=" + time + "&symbol=" + req.params.ticker + "&apikey=demo",
 		function (error, response, body) {
 			if (response && response.statusCode == 200) {
-				res.json(JSON.parse(body));
+				process("data", JSON.parse(body));
 			}
 		}
 	);
+
+	request("https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=demo", function (
+		error,
+		response,
+		body
+	) {
+		if (response && response.statusCode == 200) {
+			process("info", JSON.parse(body));
+		}
+	});
+
+	function process(key, body) {
+		output[key] = body;
+		requestsDone += 1;
+		if (requestsDone == 2) {
+			res.json(output);
+		}
+	}
 });
 
 app.listen(port, () => {
