@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const request = require("request");
+const moment = require("moment");
 
 const port = 3000;
 
@@ -10,6 +11,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
+
+app.set("view engine", "ejs");
 
 app.get("/:time/:ticker", (req, res) => {
 	let t = req.params.time;
@@ -36,7 +39,14 @@ app.get("/:time/:ticker", (req, res) => {
 		"https://www.alphavantage.co/query?function=" + time + "&symbol=" + req.params.ticker + "&apikey=demo",
 		function (error, response, body) {
 			if (response && response.statusCode == 200) {
-				process("data", JSON.parse(body));
+				let ticks = JSON.parse(body)["Time Series (Daily)"];
+				let adjusted = [];
+				Object.keys(ticks).forEach((element) => {
+					// console.log(element, ticks[element]["4. close"]);
+					let t = { x: new Date(moment(element).unix() * 1000), y: ticks[element]["4. close"] };
+					adjusted.push(t);
+				});
+				process("data", adjusted);
 			}
 		}
 	);
@@ -55,7 +65,8 @@ app.get("/:time/:ticker", (req, res) => {
 		output[key] = body;
 		requestsDone += 1;
 		if (requestsDone == 2) {
-			res.json(output);
+			// res.json(output);
+			return res.render("index", output);
 		}
 	}
 });
