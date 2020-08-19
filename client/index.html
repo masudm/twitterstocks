@@ -82,6 +82,24 @@
 			.info .card {
 				background-color: white;
 			}
+
+			.name-val {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				padding: 15px 0;
+				border-bottom: 2px solid #eeeeee;
+			}
+
+			.info-name {
+				color: #c1c1c1;
+				font-size: 1.2em;
+				margin-top: 3px;
+			}
+
+			.info-val {
+				font-size: 1.35em;
+			}
 		</style>
 	</head>
 	<body>
@@ -114,14 +132,22 @@
 					<div class="graph"><canvas id="myChart"></canvas></div>
 					<div class="info">
 						<div class="card">
-							a
+							<h1 class="card-title">IBM</h1>
+							<div class="name-val">
+								<div class="info-name">Price</div>
+								<div class="info-val">1000000</div>
+							</div>
+							<div class="name-val">
+								<div class="info-name">Price</div>
+								<div class="info-val">1000000</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
 		<script>
 			var ctx = document.getElementById("myChart").getContext("2d");
 			var chart = new Chart(ctx, {
@@ -132,19 +158,19 @@
 							label: "Scatter Dataset",
 							data: [
 								{
-									x: "183400",
+									x: new Date(1597864622503),
 									y: "124.4900",
 								},
 								{
-									x: "183300",
+									x: new Date(1597866522503),
 									y: "123.4900",
 								},
 								{
-									x: "183200",
+									x: new Date(1597866612503),
 									y: "122.4900",
 								},
 								{
-									x: "183100",
+									x: new Date(1597866622503),
 									y: "129.4900",
 								},
 							],
@@ -155,7 +181,7 @@
 					scales: {
 						xAxes: [
 							{
-								type: "linear",
+								type: "time",
 								position: "bottom",
 							},
 						],
