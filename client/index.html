@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Lato&family=Rowdies&display=swap");
+			body {
+				margin: 0;
+				padding: 0;
+				font-family: "Lato", sans-serif;
+			}
+
+			.app {
+				overflow: hidden;
+			}
+
+			.search {
+				width: 100%;
+				padding: 4px;
+			}
+
+			.search input {
+				width: 98%;
+				width: calc(100% - 20px);
+				border: 4px solid black;
+				font-size: 3em;
+			}
+
+			.main {
+				display: flex;
+				padding: 4px;
+				padding-top: 0;
+			}
+
+			.info {
+				width: 30%;
+			}
+
+			.title {
+				font-family: "Rowdies", cursive;
+				font-size: 7em;
+				text-align: center;
+			}
+			.subtitle {
+				font-family: "Rowdies", cursive;
+				font-size: 3em;
+				text-align: center;
+			}
+			.subtitle.small {
+				font-size: 1.22em;
+			}
+			.text {
+				font-family: "Lato", sans-serif;
+			}
+
+			.graph {
+				width: 70%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="app">
+			<div class="search"><input /></div>
+			<div class="main">
+				<div class="info">
+					<div class="title">IMDB</div>
+					<div class="subtitle">NYSE - USA - USD</div>
+					<div class="subtitle small">International Business Machines Corporation</div>
+				</div>
+				<div class="graph"><canvas id="myChart"></canvas></div>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+		<script>
+			var ctx = document.getElementById("myChart").getContext("2d");
+			var chart = new Chart(ctx, {
+				type: "line",
+				data: {
+					datasets: [
+						{
+							label: "Scatter Dataset",
+							data: [
+								{
+									x: "183400",
+									y: "124.4900",
+								},
+								{
+									x: "183300",
+									y: "123.4900",
+								},
+								{
+									x: "183200",
+									y: "122.4900",
+								},
+								{
+									x: "183100",
+									y: "129.4900",
+								},
+							],
+						},
+					],
+				},
+				options: {
+					scales: {
+						xAxes: [
+							{
+								type: "linear",
+								position: "bottom",
+							},
+						],
+					},
+				},
+			});
+		</script>
+	</body>
+</html>
