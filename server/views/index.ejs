@@ -14,6 +14,21 @@
 				height: 5vh;
 			}
 
+			.search {
+				height: 99%;
+				width: 99%;
+				border: none;
+				font-size: 2em;
+				font-family: "Lato", sans-serif;
+				outline: none;
+				text-align: center;
+			}
+
+			.search::placeholder {
+				color: rgba(0, 0, 0, 0.1);
+				font-style: italic;
+			}
+
 			.app {
 				background-color: #f4f7f9;
 				height: 95vh;
@@ -112,7 +127,7 @@
 	</head>
 	<body>
 		<div class="main">
-			<div class="header">search here</div>
+			<div class="header"><input class="search" placeholder="Search here" /></div>
 			<div class="app">
 				<div class="stats">
 					<div class="card">
