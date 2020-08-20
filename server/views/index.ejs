@@ -131,24 +131,24 @@
 			<div class="app">
 				<div class="stats">
 					<div class="card">
-						<h1 class="card-title"><span class="small-title">$</span>34343</h1>
-						<h2 class="card-subtitle">some text here</h2>
+						<h1 class="card-title"><span class="small-title">$</span><%= quote['05. price'] %></h1>
+						<h2 class="card-subtitle">Price</h2>
 					</div>
 					<div class="card">
-						<h1 class="card-title"><span class="small-title">$</span><%= info['50DayMovingAverage'] %></h1>
-						<h2 class="card-subtitle">50 Day Moving Average</h2>
+						<h1 class="card-title"><span class="small-title">$</span><%= quote['02. open'] %></h1>
+						<h2 class="card-subtitle">Open</h2>
 					</div>
 					<div class="card">
-						<h1 class="card-title"><span class="small-title">$</span><%= info['52WeekHigh'] %></h1>
-						<h2 class="card-subtitle">52 Week High</h2>
+						<h1 class="card-title"><span class="small-title">$</span><%= quote['03. high'] %></h1>
+						<h2 class="card-subtitle">High</h2>
 					</div>
 					<div class="card">
-						<h1 class="card-title"><span class="small-title">$</span><%= info['52WeekLow'] %></h1>
-						<h2 class="card-subtitle">52 Week Low</h2>
+						<h1 class="card-title"><span class="small-title">$</span><%= quote['04. low'] %></h1>
+						<h2 class="card-subtitle">Low</h2>
 					</div>
 					<div class="card">
-						<h1 class="card-title"><span class="small-title">$</span><%= info.AnalystTargetPrice %></h1>
-						<h2 class="card-subtitle">Analyst Target Price</h2>
+						<h1 class="card-title"><span class="small-title">$</span><%= quote['08. previous close'] %></h1>
+						<h2 class="card-subtitle">Previous Close - <%= quote['07. latest trading day'] %></h2>
 					</div>
 				</div>
 				<div class="panel">
@@ -157,12 +157,20 @@
 						<div class="card">
 							<h1 class="card-title"><%= info.Symbol %></h1>
 							<div class="name-val">
-								<div class="info-name">Price</div>
-								<div class="info-val">1000000</div>
+								<div class="info-name">50 Day Moving Average</div>
+								<div class="info-val">$<%= info['50DayMovingAverage'] %></div>
 							</div>
 							<div class="name-val">
-								<div class="info-name">Price</div>
-								<div class="info-val">1000000</div>
+								<div class="info-name">52 Week High</div>
+								<div class="info-val">$<%= info['52WeekHigh'] %></div>
+							</div>
+							<div class="name-val">
+								<div class="info-name">52 Week Low</div>
+								<div class="info-val">$<%= info['52WeekLow'] %></div>
+							</div>
+							<div class="name-val">
+								<div class="info-name">Analyst Target Price</div>
+								<div class="info-val">$<%= info.AnalystTargetPrice %></div>
 							</div>
 						</div>
 					</div>
@@ -172,8 +180,9 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
 		<script>
 			let info = <%- JSON.stringify(info) %>;
-			console.log(info);
 			let data = <%- JSON.stringify(data) %>;
+			let quote = <%- JSON.stringify(quote) %>;
+			console.log(data);
 
 			var ctx = document.getElementById("myChart").getContext("2d");
 			var chart = new Chart(ctx, {

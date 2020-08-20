@@ -47,8 +47,8 @@ app.get("/:time/:ticker", (req, res) => {
 				let ticks = JSON.parse(body)[tObjName];
 				let adjusted = [];
 				Object.keys(ticks).forEach((element) => {
-					// console.log(element, ticks[element]["4. close"]);
-					let t = { x: new Date(moment(element).unix() * 1000), y: ticks[element]["4. close"] };
+					//console.log(element, ticks[element]["4. close"]);
+					let t = { x: new Date((moment(element).unix() + 3600) * 1000), y: ticks[element]["4. close"] };
 					adjusted.push(t);
 				});
 				process("data", adjusted);
@@ -66,10 +66,20 @@ app.get("/:time/:ticker", (req, res) => {
 		}
 	});
 
+	request("https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo", function (
+		error,
+		response,
+		body
+	) {
+		if (response && response.statusCode == 200) {
+			process("quote", JSON.parse(body)["Global Quote"]);
+		}
+	});
+
 	function process(key, body) {
 		output[key] = body;
 		requestsDone += 1;
-		if (requestsDone == 2) {
+		if (requestsDone == 3) {
 			// res.json(output);
 			return res.render("index", output);
 		}
