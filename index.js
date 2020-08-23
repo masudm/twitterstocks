@@ -48,7 +48,10 @@ app.get("/:time/:ticker", (req, res) => {
 				let adjusted = [];
 				Object.keys(ticks).forEach((element) => {
 					//console.log(element, ticks[element]["4. close"]);
-					let t = { x: new Date((moment(element).unix() + 3600) * 1000), y: ticks[element]["4. close"] };
+					let t = {
+						x: new Date((moment(element).unix() + 3600 + 48 * 3600) * 1000),
+						y: ticks[element]["4. close"],
+					};
 					adjusted.push(t);
 				});
 				process("data", adjusted);
