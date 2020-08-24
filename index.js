@@ -1,10 +1,15 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const request = require("request");
 const moment = require("moment");
+const Twit = require("twit");
+const Sentiment = require("sentiment");
 
 const port = 3000;
+
+var sentiment = new Sentiment();
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -87,6 +92,30 @@ app.get("/:time/:ticker", (req, res) => {
 			return res.render("index", output);
 		}
 	}
+});
+
+//sentiment
+var T = new Twit({
+	consumer_key: process.env.CONSUMER_KEY,
+	consumer_secret: process.env.CONSUMER_SECRET,
+	access_token: process.env.ACCESS_TOKEN,
+	access_token_secret: process.env.ACCESS_TOKEN_SECRET,
+	timeout_ms: 60 * 1000, // optional HTTP request timeout to apply to all requests.
+	strictSSL: false, // optional - requires SSL certificates to be valid.
+});
+
+//
+// filter the public stream by english tweets
+//
+var stream = T.stream("statuses/filter", { track: "blm", language: "en" });
+
+stream.on("tweet", function (tweet) {
+	//console.log(sentiment.analyze(tweet.text));
+	let text = tweet.text;
+	if (tweet.extended_tweet) {
+		text = "EXTENDED" + tweet.extended_tweet.full_text;
+	}
+	console.log(text);
 });
 
 app.listen(port, () => {
