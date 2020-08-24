@@ -107,7 +107,10 @@ var S = new Sentiment();
 //
 // filter the public stream by english tweets
 //
-var stream = T.stream("statuses/filter", { track: "blm", language: "en" });
+var stream = T.stream("statuses/filter", { track: "apple", language: "en" });
+
+let stock = 497.48;
+let stockSentiment = 0;
 
 stream.on("tweet", function (tweet) {
 	let text = tweet.text;
@@ -140,6 +143,12 @@ stream.on("tweet", function (tweet) {
 
 	if (verified) {
 		influence = 70;
+	} else {
+		// if they're not verified, there's a chance they;re a spammer - try and cut down on it
+		text = text.toLowerCase();
+		if (text.indexOf("follow me") >= 0 || text.indexOf(" dm ") >= 0 || text.indexOf("cashapp") >= 0) {
+			influence = 10000000;
+		}
 	}
 
 	//add one to these to ensure there's no div by 0 errors - minimum is one
@@ -155,8 +164,15 @@ stream.on("tweet", function (tweet) {
 	influence -= ratio;
 
 	score = score / influence;
-	console.log(score, followers, friends, influence);
+
+	stock = stock + stock * score * 0.01;
+	stockSentiment += score;
+	stockSentiment = Math.max(Math.min(stockSentiment, 1), -1);
 });
+
+setInterval(() => {
+	console.log("price: " + stock, stockSentiment);
+}, 1000);
 
 app.listen(port, () => {
 	console.log(`app listening at http://localhost:${port}`);
