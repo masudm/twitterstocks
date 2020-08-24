@@ -9,8 +9,6 @@ const Sentiment = require("sentiment");
 
 const port = 3000;
 
-var sentiment = new Sentiment();
-
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -104,18 +102,60 @@ var T = new Twit({
 	strictSSL: false, // optional - requires SSL certificates to be valid.
 });
 
+var S = new Sentiment();
+
 //
 // filter the public stream by english tweets
 //
 var stream = T.stream("statuses/filter", { track: "blm", language: "en" });
 
 stream.on("tweet", function (tweet) {
-	//console.log(sentiment.analyze(tweet.text));
 	let text = tweet.text;
 	if (tweet.extended_tweet) {
-		text = "EXTENDED" + tweet.extended_tweet.full_text;
+		text = tweet.extended_tweet.full_text;
 	}
-	console.log(text);
+
+	let verified = false;
+	let followers = 1;
+	let friends = 1;
+
+	if (tweet.user) {
+		verified = tweet.user.verified;
+
+		followers = tweet.user.followers_count;
+		friends = tweet.user.friends_count;
+	}
+
+	let sentiment = S.analyze(text);
+	let score = 0;
+
+	if (sentiment) {
+		score = sentiment.comparative; //this is a number from -1 to 1 representing how negative/positive the statement is as a whole
+	}
+
+	//to get the final score, we need to first work out how influential they are
+	//a lower influence figure means they are MORE influential. e.g. people are 100 by default and famous people will be nearer 1
+
+	let influence = 100;
+
+	if (verified) {
+		influence = 70;
+	}
+
+	//add one to these to ensure there's no div by 0 errors - minimum is one
+	let ratio = (followers + 1) / (friends + 1);
+
+	//arguably, one of the most influential people on twitter is trump - so use him as a reference
+	//as of now, his ratio would be 1676470.61 - far too high
+	//divide this by a constant of 30000 takes it to 56 - a more reasonable figure
+	//set a maximum too just in case someone has a super high figure
+	ratio = ratio / 30000;
+	ratio = Math.min(60, ratio / 30000);
+
+	influence -= ratio;
+
+	score = score / influence;
+	console.log(score, followers, friends, influence);
 });
 
 app.listen(port, () => {
