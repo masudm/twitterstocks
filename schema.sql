@@ -18,6 +18,17 @@ KEY `fkIdx_10` (`companyId`),
 CONSTRAINT `FK_10` FOREIGN KEY `fkIdx_10` (`companyId`) REFERENCES `company` (`companyId`)
 );
 
+INSERT INTO `stocks`.`company` (`companyId`, `name`, `ticker`) VALUES ('1', 'Apple', 'AAPL');
+INSERT INTO `stocks`.`search` (`companyId`, `type`, `term`) VALUES ('1', 'user', 'tim_cook');
+INSERT INTO `stocks`.`search` (`companyId`, `type`, `term`) VALUES ('1', 'user', 'apple');
+INSERT INTO `stocks`.`search` (`companyId`, `type`, `term`) VALUES ('1', 'track', 'apple');
+INSERT INTO `stocks`.`search` (`companyId`, `type`, `term`) VALUES ('1', 'track', 'aapl');
+INSERT INTO `stocks`.`search` (`companyId`, `type`, `term`) VALUES ('1', 'track', 'iphone');
+INSERT INTO `stocks`.`search` (`companyId`, `type`, `term`) VALUES ('1', 'track', 'ipad');
+INSERT INTO `stocks`.`search` (`companyId`, `type`, `term`) VALUES ('1', 'track', 'ios');
+INSERT INTO `stocks`.`search` (`companyId`, `type`, `term`) VALUES ('1', 'track', 'mac');
+
+
 
 
 
