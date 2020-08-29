@@ -15,16 +15,18 @@ JOIN search ON search.companyId = company.companyId;`,
 			}
 
 			if (record.type == "user") {
-				users.push(record.term);
-				records[record.ticker].users.push(record.term);
+				users.push(parseInt(record.term));
+				records[record.ticker].users.push(parseInt(record.term));
 			} else if (record.type == "track") {
 				track.push(record.term);
 				records[record.ticker].track.push(record.term);
 			}
 		});
-		console.log(users);
-		console.log(track);
-		console.log(records);
+		users
+			.sort(function (a, b) {
+				return b - a;
+			})
+			.reverse();
 
 		require("./sentiment")(users, track);
 	}

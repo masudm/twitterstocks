@@ -1,6 +1,7 @@
 const Twit = require("twit");
 const Sentiment = require("sentiment");
 const db = require("./db");
+const bs = require("binary-search");
 
 module.exports = function (users, track) {
 	var T = new Twit({
@@ -25,8 +26,6 @@ module.exports = function (users, track) {
 			text = tweet.extended_tweet.full_text;
 		}
 
-		console.log(text);
-
 		let verified = false;
 		let followers = 1;
 		let friends = 1;
@@ -36,6 +35,12 @@ module.exports = function (users, track) {
 
 			followers = tweet.user.followers_count;
 			friends = tweet.user.friends_count;
+
+			console.log(
+				bs(users, tweet.user.id, function (element, needle) {
+					return element - needle;
+				})
+			);
 		}
 
 		let sentiment = S.analyze(text);
