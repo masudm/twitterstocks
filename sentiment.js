@@ -3,7 +3,13 @@ const Sentiment = require("sentiment");
 const db = require("./db");
 const bs = require("binary-search");
 
-module.exports = function (users, track) {
+module.exports = function (usersMapping, trackMapping) {
+	let users = Object.keys(usersMapping);
+	users.sort(function (a, b) {
+		return a - b;
+	});
+	let track = Object.keys(trackMapping);
+
 	var T = new Twit({
 		consumer_key: process.env.CONSUMER_KEY,
 		consumer_secret: process.env.CONSUMER_SECRET,
@@ -35,12 +41,6 @@ module.exports = function (users, track) {
 
 			followers = tweet.user.followers_count;
 			friends = tweet.user.friends_count;
-
-			console.log(
-				bs(users, tweet.user.id, function (element, needle) {
-					return element - needle;
-				})
-			);
 		}
 
 		let sentiment = S.analyze(text);
@@ -82,5 +82,14 @@ module.exports = function (users, track) {
 		stock = stock + stock * score * 0.01;
 		stockSentiment += score;
 		stockSentiment = Math.max(Math.min(stockSentiment, 1), -1);
+
+		const userTweet =
+			bs(users, tweet.user.id, function (element, needle) {
+				return element - needle;
+			}) > 0;
+
+		if (userTweet) {
+			console.log("user tweet @", tweet.user.name, " for stock: ", usersMapping[tweet.user.id]);
+		}
 	});
 };
