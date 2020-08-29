@@ -17,7 +17,7 @@ app.set("view engine", "ejs");
 require("./routes")(app);
 
 //sentiment
-require("./sentiment");
+require("./configureSentiment");
 
 app.listen(port, () => {
 	console.log(`app listening at http://localhost:${port}`);
