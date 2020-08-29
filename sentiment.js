@@ -1,5 +1,6 @@
 const Twit = require("twit");
 const Sentiment = require("sentiment");
+const db = require("./db");
 
 var T = new Twit({
 	consumer_key: process.env.CONSUMER_KEY,
@@ -12,13 +13,19 @@ var T = new Twit({
 
 var S = new Sentiment();
 
-//
-// filter the public stream by english tweets
-//
 var stream = T.stream("statuses/filter", { track: "apple", language: "en" });
 
 let stock = 497.48;
 let stockSentiment = 0;
+
+db.query(
+	`SELECT * FROM company
+JOIN search ON search.companyId = company.companyId;`,
+	function (error, results, fields) {
+		if (error) throw error;
+		console.log(results);
+	}
+);
 
 stream.on("tweet", function (tweet) {
 	let text = tweet.text;
