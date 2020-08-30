@@ -2,6 +2,9 @@ const request = require("request");
 const moment = require("moment");
 
 module.exports = function (app) {
+	app.get("/", (req, res) => {
+		return res.render("homepage");
+	});
 	app.get("/:time/:ticker", (req, res) => {
 		let t = req.params.time;
 		let time = "TIME_SERIES_INTRADAY&interval=5min";
@@ -29,11 +32,17 @@ module.exports = function (app) {
 		let output = {};
 
 		request(
-			"https://www.alphavantage.co/query?function=" + time + "&symbol=" + req.params.ticker + "&apikey=demo",
+			"https://www.alphavantage.co/query?function=" +
+				time +
+				"&symbol=" +
+				req.params.ticker +
+				"&apikey=" +
+				process.env.ALPHAVANTAGE_KEY,
 			function (error, response, body) {
 				if (response && response.statusCode == 200) {
 					let ticks = JSON.parse(body)[tObjName];
 					let adjusted = [];
+					console.log(body);
 					Object.keys(ticks).forEach((element) => {
 						//console.log(element, ticks[element]["4. close"]);
 						let t = {
@@ -42,37 +51,35 @@ module.exports = function (app) {
 						};
 						adjusted.push(t);
 					});
-					process("data", adjusted);
+					processData("data", adjusted);
 				}
 			}
 		);
 
-		request("https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=demo", function (
-			error,
-			response,
-			body
-		) {
-			if (response && response.statusCode == 200) {
-				process("info", JSON.parse(body));
+		request(
+			"https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=" + process.env.ALPHAVANTAGE_KEY,
+			function (error, response, body) {
+				if (response && response.statusCode == 200) {
+					processData("info", JSON.parse(body));
+				}
 			}
-		});
+		);
 
-		request("https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo", function (
-			error,
-			response,
-			body
-		) {
-			if (response && response.statusCode == 200) {
-				process("quote", JSON.parse(body)["Global Quote"]);
+		request(
+			"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=" + process.env.ALPHAVANTAGE_KEY,
+			function (error, response, body) {
+				if (response && response.statusCode == 200) {
+					processData("quote", JSON.parse(body)["Global Quote"]);
+				}
 			}
-		});
+		);
 
-		function process(key, body) {
+		function processData(key, body) {
 			output[key] = body;
 			requestsDone += 1;
 			if (requestsDone == 3) {
 				// res.json(output);
-				return res.render("index", output);
+				return res.render("stock", output);
 			}
 		}
 	});
