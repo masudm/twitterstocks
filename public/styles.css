@@ -3,6 +3,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: "Lato", sans-serif;
+	background-color: #f4f7f9;
 }
 
 .header {
@@ -147,4 +148,12 @@ body {
 
 .homepage .header {
 	height: auto;
+	background: transparent;
+}
+
+.smallGraph {
+	width: calc(100% + 40px);
+	height: 85%;
+	margin-left: -20px;
+	margin-top: 5px;
 }
