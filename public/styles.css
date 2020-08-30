@@ -122,9 +122,13 @@ body {
 }
 
 .cards {
-	display: flex;
 	max-width: 1000px;
 	margin: auto;
+	padding-left: 50px;
+	display: grid;
+	align-items: center;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 0fr));
+	grid-row-gap: 10px;
 }
 
 .cards .card {
@@ -156,4 +160,12 @@ body {
 	height: 85%;
 	margin-left: -20px;
 	margin-top: 5px;
+}
+
+#cards .card {
+	margin: 0;
+}
+
+#cards .card:nth-child(1) {
+	margin-left: 0px;
 }

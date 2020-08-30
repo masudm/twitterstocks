@@ -2,9 +2,57 @@ const request = require("request");
 const moment = require("moment");
 
 module.exports = function (app) {
+	//these stocks are displayed on the homepage
+	const homepageStocks = ["AAPL", "MSFT", "IBM", "FB", "TWTR", "AMZN", "GOOGL", "INTC", "AMD", "NFLX", "UBER"];
+	let stockIndex = 0;
+	//cache them so the homepage load is quicker
+	let homepageCache = {};
+
+	function generateData() {
+		for (var i = stockIndex; i < stockIndex + 5; i++) {
+			if (i >= homepageStocks.length) {
+				stockIndex = -5;
+				break;
+			}
+
+			let tick = homepageStocks[i];
+
+			request(
+				"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" +
+					tick +
+					"&interval=5min" +
+					"&apikey=" +
+					process.env.ALPHAVANTAGE_KEY,
+				function (error, response, body) {
+					if (response && response.statusCode == 200) {
+						let ticks = JSON.parse(body)["Time Series (5min)"];
+						let adjusted = [];
+						// console.log(body);
+						Object.keys(ticks).forEach((element) => {
+							//console.log(element, ticks[element]["4. close"]);
+							let t = {
+								x: new Date((moment(element).unix() + 3600 + 48 * 3600) * 1000),
+								y: ticks[element]["4. close"],
+							};
+							adjusted.push(t);
+						});
+						homepageCache[tick] = adjusted;
+						console.log(tick, " done");
+					}
+				}
+			);
+		}
+
+		stockIndex += 5;
+	}
+
+	generateData();
+	setInterval(() => generateData(), 60 * 1000);
+
 	app.get("/", (req, res) => {
-		return res.render("homepage");
+		return res.render("homepage", { homepageCache: homepageCache });
 	});
+
 	app.get("/:time/:ticker", (req, res) => {
 		let t = req.params.time;
 		let time = "TIME_SERIES_INTRADAY&interval=5min";
