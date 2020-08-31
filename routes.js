@@ -46,7 +46,7 @@ module.exports = function (app) {
 		stockIndex += 5;
 	}
 
-	generateData();
+	// generateData();
 	setInterval(() => generateData(), 60 * 1000);
 
 	app.get("/", (req, res) => {

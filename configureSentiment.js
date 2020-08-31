@@ -12,7 +12,10 @@ JOIN search ON search.companyId = company.companyId;`,
 			if (record.type == "user") {
 				users[parseInt(record.term)] = record.ticker;
 			} else if (record.type == "track") {
-				track[record.term] = record.ticker;
+				if (!track[record.ticker]) {
+					track[record.ticker] = [];
+				}
+				track[record.ticker].push(record.term);
 			}
 		});
 

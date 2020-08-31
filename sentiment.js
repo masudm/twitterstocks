@@ -8,7 +8,7 @@ module.exports = function (usersMapping, trackMapping) {
 	users.sort(function (a, b) {
 		return a - b;
 	});
-	let track = Object.keys(trackMapping);
+	let track = Object.values(trackMapping).join().split(",");
 
 	var T = new Twit({
 		consumer_key: process.env.CONSUMER_KEY,
@@ -90,6 +90,10 @@ module.exports = function (usersMapping, trackMapping) {
 
 		if (userTweet) {
 			console.log("user tweet @", tweet.user.name, " for stock: ", usersMapping[tweet.user.id]);
+		} else {
+			if (new RegExp(trackMapping["AAPL"].join("|")).test(text)) {
+				console.log("Apple: ", text);
+			}
 		}
 	});
 };
