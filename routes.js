@@ -3,7 +3,7 @@ const moment = require("moment");
 
 module.exports = function (app) {
 	//these stocks are displayed on the homepage
-	const homepageStocks = ["AAPL", "MSFT", "IBM", "FB", "TWTR", "AMZN", "GOOGL", "INTC", "AMD", "NFLX", "UBER"];
+	const homepageStocks = ["AAPL", "MSFT", "IBM", "FB", "TWTR", "AMZN", "GOOGL", "INTC", "AMD"];
 	let stockIndex = 0;
 	//cache them so the homepage load is quicker
 	let homepageCache = {};
