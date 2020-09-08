@@ -22,7 +22,7 @@ module.exports = function (app) {
 					tick +
 					"&interval=5min" +
 					"&apikey=" +
-					process.env.ALPHAVANTAGE_KEY,
+					process.env.ALPHAVANTAGE_HOMEPAGE_KEY,
 				function (error, response, body) {
 					if (response && response.statusCode == 200) {
 						let ticks = JSON.parse(body)["Time Series (5min)"];
@@ -47,7 +47,7 @@ module.exports = function (app) {
 	}
 
 	// generateData();
-	setInterval(() => generateData(), 60 * 1000);
+	// setInterval(() => generateData(), 60 * 60 * 1000);
 
 	app.get("/", (req, res) => {
 		return res.render("homepage", { homepageCache: homepageCache });
