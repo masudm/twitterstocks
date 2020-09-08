@@ -4,6 +4,8 @@ const db = require("./db");
 const bs = require("binary-search");
 
 module.exports = function (usersMapping, trackMapping) {
+	let stocks = { AAPL: 1, IBM: 1 };
+
 	let users = Object.keys(usersMapping);
 	users.sort(function (a, b) {
 		return a - b;
@@ -22,9 +24,6 @@ module.exports = function (usersMapping, trackMapping) {
 	var S = new Sentiment();
 
 	var stream = T.stream("statuses/filter", { track: track, follow: users, language: "en" });
-
-	let stock = 497.48;
-	let stockSentiment = 0;
 
 	stream.on("tweet", function (tweet) {
 		let text = tweet.text;
@@ -79,9 +78,8 @@ module.exports = function (usersMapping, trackMapping) {
 
 		score = score / influence;
 
-		stock = stock + stock * score * 0.01;
-		stockSentiment += score;
-		stockSentiment = Math.max(Math.min(stockSentiment, 1), -1);
+		// stockSentiment += score;
+		// stockSentiment = Math.max(Math.min(stockSentiment, 1), -1);
 
 		const userTweet =
 			bs(users, tweet.user.id, function (element, needle) {
@@ -89,11 +87,17 @@ module.exports = function (usersMapping, trackMapping) {
 			}) > 0;
 
 		if (userTweet) {
-			console.log("user tweet @", tweet.user.name, " for stock: ", usersMapping[tweet.user.id]);
+			stocks[usersMapping[tweet.user.id]] += stocks[usersMapping[tweet.user.id]] * score * 0.01;
 		} else {
-			if (new RegExp(trackMapping["AAPL"].join("|")).test(text)) {
-				console.log("Apple: ", text);
-			}
+			Object.keys(trackMapping).forEach((tick) => {
+				if (new RegExp(trackMapping[tick].join("|")).test(text)) {
+					stocks[tick] += stocks[tick] * score * 0.01;
+				}
+			});
 		}
 	});
+
+	setInterval(() => {
+		console.log(stocks);
+	}, 1000);
 };
