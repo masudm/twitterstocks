@@ -3,8 +3,8 @@ const Sentiment = require("sentiment");
 const db = require("./db");
 const bs = require("binary-search");
 
-module.exports = function (usersMapping, trackMapping) {
-	let stocks = { AAPL: 1, IBM: 1 };
+module.exports = function (usersMapping, trackMapping, stocks) {
+	console.log(stocks);
 
 	let users = Object.keys(usersMapping);
 	users.sort(function (a, b) {

@@ -1,9 +1,11 @@
 const request = require("request");
 const moment = require("moment");
+const db = require("./db");
 
 module.exports = function (app) {
 	//these stocks are displayed on the homepage
-	const homepageStocks = ["AAPL", "MSFT", "IBM", "FB", "TWTR", "AMZN", "GOOGL", "INTC", "AMD"];
+	const homepageStocks = ["AAPL", "MSFT", "IBM"]; //, "FB", "TWTR", "AMZN", "GOOGL", "INTC", "AMD"];
+	const companyIds = [1, 3, 2];
 	let stockIndex = 0;
 	//cache them so the homepage load is quicker
 	let homepageCache = {};
@@ -16,6 +18,7 @@ module.exports = function (app) {
 			}
 
 			let tick = homepageStocks[i];
+			let companyId = companyIds[i];
 
 			request(
 				"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" +
@@ -31,13 +34,20 @@ module.exports = function (app) {
 						Object.keys(ticks).forEach((element) => {
 							//console.log(element, ticks[element]["4. close"]);
 							let t = {
-								x: new Date((moment(element).unix() + 3600 + 48 * 3600) * 1000),
+								x: new Date(moment(element).unix() * 1000),
 								y: ticks[element]["4. close"],
 							};
 							adjusted.push(t);
 						});
 						homepageCache[tick] = adjusted;
-						console.log(tick, " done");
+
+						let sql = `INSERT INTO tick (companyId, price, data) VALUES (${companyId}, ${
+							adjusted[0].y
+						}, '${JSON.stringify(adjusted)}');`;
+						// console.log(sql);
+						db.query(sql, function (error, results, fields) {
+							console.log(error, tick, " done");
+						});
 					}
 				}
 			);
